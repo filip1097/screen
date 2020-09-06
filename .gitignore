@@ -1,0 +1,5 @@
+# ignore .pyc files
+*.pyc
+
+# ignore api key
+api_key.txt

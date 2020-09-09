@@ -3,3 +3,9 @@
 
 # ignore api key
 api_key.txt
+
+# ignore client secret for google task api
+client_secret.json
+
+# ignore token to google api
+token.pickle

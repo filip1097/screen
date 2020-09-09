@@ -17,6 +17,7 @@ from PIL import Image,ImageDraw,ImageFont
 # my files
 import DateAndTime
 from weather import get_weather_dict
+from tasks import get_all_task_titles
 
 def update_screen(dt, logging):
   # Get weather information
@@ -51,6 +52,8 @@ def update_screen(dt, logging):
     draw_temperature(draw, weather)
     draw_weather_desc(draw, weather)
 
+    # Task Section
+    draw_tasks(draw)
 
     # Displaying image on screen
     logging.info("Displaying image")
@@ -81,6 +84,18 @@ def draw_horizontal_line(draw):
   draw.line((0, 129, 200, 129), fill = 0) 
   draw.line((0, 130, 200, 130), fill = 0)
   draw.line((0, 131, 200, 131), fill = 0)
+
+
+def draw_tasks(draw):
+  logging.info("API call for tasks")
+  tasks = get_all_task_titles()
+
+  logging.info("Drawing tasks")
+
+  height = 25
+  for task in tasks:
+    draw.text((220, height), '-' + task, font = font18, fill = 0)
+    height = height + 25
 
 
 def draw_temperature(draw, weather):

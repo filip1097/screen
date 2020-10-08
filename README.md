@@ -1,5 +1,13 @@
 # Info Screen
- Code for controlling my waveshare 4.2 inch e-Paper screen.
+Code for controlling my waveshare 4.2 inch e-Paper screen. The display
+shows the time and date, the weather and temperature, and all current tasks on my Google task lists.
+
+### To use this code
+
+To use this code for yourself, you need to:
+
+1. Add a key to the OpenWeather API in the file ```code/api_key.txt```.
+2. Add a client secret from google which allows access to their Task API in the file ```code/client_secret.txt```. 
 
 ### Other code
 

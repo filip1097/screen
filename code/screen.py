@@ -53,6 +53,7 @@ def update_screen(dt, logging):
     draw_weather_desc(draw, weather)
 
     # Task Section
+    draw_todo(draw)
     draw_tasks(draw)
 
     # Displaying image on screen
@@ -92,7 +93,7 @@ def draw_tasks(draw):
 
   logging.info("Drawing tasks")
 
-  height = 25
+  height = 60
   for task in tasks:
     draw.text((220, height), '-' + task, font = font18, fill = 0)
     height = height + 25
@@ -106,6 +107,11 @@ def draw_temperature(draw, weather):
   draw.text((107, 130), 'o', font = font24, fill = 0)
   # print celsius C
   draw.text((120, 125), 'C', font = font68, fill = 0)
+
+
+def draw_todo(draw):
+  logging.info("Drawing TODO")
+  draw.text((220, 10), "TODO:", font = font35, fill = 0)
 
 
 def draw_weather_desc(draw, weather):

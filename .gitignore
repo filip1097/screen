@@ -9,3 +9,6 @@ client_secret.json
 
 # ignore token to google api
 token.pickle
+
+# ignore .log files
+*.log

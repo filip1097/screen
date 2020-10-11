@@ -19,6 +19,8 @@ import DateAndTime
 from weather import get_weather_dict
 from tasks import get_all_task_titles
 
+LOG_FILE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'screen.log')
+
 def update_screen(dt, logging):
   # Get weather information
   weather = get_weather_dict()
@@ -126,9 +128,19 @@ def paste_weather_icon(image, weather):
   image.paste(weather_icon, (50, 180))
 
 
+def check_log_file():
+  logging.info('Checking if the log file should be cleared')
+  log_file_stat = os.stat(LOG_FILE_PATH)
+
+  if log_file_stat.st_size > 1048576: # if log file is larger than 10 MB ( 1024^2 = 1048576 )
+    logging.info('Clearing log file')
+    open(LOG_FILE_PATH, 'w').close()   # clears the content of the log file
+    logging.info('Cleared log file')
+
+
 if __name__ == "__main__":
   # init logging
-  logging.basicConfig(level=logging.DEBUG)
+  logging.basicConfig(filename=LOG_FILE_PATH, level=logging.DEBUG)
   logging.info("Start Screen Program")
 
   # init date and time 
@@ -141,6 +153,7 @@ if __name__ == "__main__":
   font68 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 68)
 
   schedule.every(1).minutes.do(update_screen, dt = dt, logging = logging)
+  schedule.every(5).minutes.do(check_log_file)
 
   update_screen(dt, logging)
 

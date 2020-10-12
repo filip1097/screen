@@ -103,12 +103,22 @@ def draw_tasks(draw):
 
 def draw_temperature(draw, weather):
   logging.info("Drawing temperature")
-  # print temperature
-  draw.text((30, 125), str( round(weather['temp']) ), font = font68, fill = 0)
-  # print degree sign
-  draw.text((107, 130), 'o', font = font24, fill = 0)
-  # print celsius C
-  draw.text((120, 125), 'C', font = font68, fill = 0)
+  
+  temp_str = str( round(weather['temp']) )
+  # print temperature depending on length of string
+  if len(temp_str) == 1:
+    draw.text((48, 125), str( round(weather['temp']) ), font = font68, fill = 0)
+    # print degree sign
+    draw.text((92, 130), 'o', font = font24, fill = 0)
+    # print celsius C
+    draw.text((105, 125), 'C', font = font68, fill = 0)
+
+  elif len(temp_str) == 2:
+    draw.text((30, 125), str( round(weather['temp']) ), font = font68, fill = 0)
+    # print degree sign
+    draw.text((107, 130), 'o', font = font24, fill = 0)
+    # print celsius C
+    draw.text((120, 125), 'C', font = font68, fill = 0)
 
 
 def draw_todo(draw):
@@ -158,6 +168,14 @@ if __name__ == "__main__":
   update_screen(dt, logging)
 
   while True:
-    schedule.run_pending()
-    time.sleep(1)
+    try:
+      schedule.run_pending()
+      time.sleep(1)
+    
+    except Exception as e:
+      logging.error("Unexpected exception:")
+      logging.error(e)
+      epd4in2.epdconfig.module_exit()
+      exit()  
+      
  

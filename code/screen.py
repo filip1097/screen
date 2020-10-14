@@ -16,15 +16,12 @@ from PIL import Image,ImageDraw,ImageFont
 
 # my files
 import DateAndTime
-from weather import get_weather_dict
+import Weather
 from tasks import get_all_task_titles
 
 LOG_FILE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'screen.log')
 
-def update_screen(dt, logging):
-  # Get weather information
-  weather = get_weather_dict()
-
+def update_screen(dt, logging, weather):
   # Update time
   dt.update()
 
@@ -148,6 +145,12 @@ def check_log_file():
     logging.info('Cleared log file')
 
 
+def update_weather(weather_obj):
+  logging.info('Updating weather')
+  # Get weather information
+  weather_obj.update_weather_dict()
+
+
 if __name__ == "__main__":
   # init logging
   logging.basicConfig(filename=LOG_FILE_PATH, level=logging.DEBUG)
@@ -156,16 +159,20 @@ if __name__ == "__main__":
   # init date and time 
   dt = DateAndTime.DateAndTime()
 
+  # init weather
+  weather_obj = Weather.Weather()
+
   # init the fonts
   font18 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 18)
   font24 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 24)
   font35 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 35)
   font68 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 68)
 
-  schedule.every(1).minutes.do(update_screen, dt = dt, logging = logging)
+  schedule.every(1).minutes.do(update_screen, dt = dt, logging = logging, weather = weather_obj.weather_dict)
+  schedule.every(1).minutes.do(update_weather, weather_obj = weather_obj)
   schedule.every(5).minutes.do(check_log_file)
 
-  update_screen(dt, logging)
+  update_screen(dt, logging, weather_obj.weather_dict)
 
   while True:
     try:

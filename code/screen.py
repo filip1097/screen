@@ -11,6 +11,7 @@ if os.path.exists(libdir):
 import logging
 import schedule
 import time
+import traceback
 from waveshare_epd import epd4in2
 from PIL import Image,ImageDraw,ImageFont
 
@@ -21,7 +22,7 @@ from tasks import get_all_task_titles
 
 LOG_FILE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'screen.log')
 
-def update_screen(dt, logging, weather):
+def update_screen(dt, weather):
   # Update time
   dt.update()
 
@@ -168,11 +169,11 @@ if __name__ == "__main__":
   font35 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 35)
   font68 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 68)
 
-  schedule.every(1).minutes.do(update_screen, dt = dt, logging = logging, weather = weather_obj.weather_dict)
+  schedule.every(1).minutes.do(update_screen, dt = dt, weather = weather_obj.weather_dict)
   schedule.every(1).minutes.do(update_weather, weather_obj = weather_obj)
   schedule.every(5).minutes.do(check_log_file)
 
-  update_screen(dt, logging, weather_obj.weather_dict)
+  update_screen(dt, weather_obj.weather_dict)
 
   while True:
     try:
@@ -182,6 +183,7 @@ if __name__ == "__main__":
     except Exception as e:
       logging.error("Unexpected exception:")
       logging.error(e)
+      traceback.print_exc(file = LOG_FILE_PATH)
       epd4in2.epdconfig.module_exit()
       exit()  
       

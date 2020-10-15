@@ -17,12 +17,9 @@ class Weather:
     if weather_request.status_code == 200: # HTTP code for success
       weather_json = weather_request.json()
 
-      new_weather_dict = {}
-      new_weather_dict['description'] = weather_json['weather'][0]['description']
-      new_weather_dict['temp'] = weather_json['main']['temp']
-      new_weather_dict['icon_file_name'] = "{}_2x.bmp".format( weather_json['weather'][0]['icon'] )
-
-      self.weather_dict = new_weather_dict
+      self.weather_dict['description'] = weather_json['weather'][0]['description']
+      self.weather_dict['temp'] = weather_json['main']['temp']
+      self.weather_dict['icon_file_name'] = "{}_2x.bmp".format( weather_json['weather'][0]['icon'] )
 
 
 def get_weather_request():
@@ -30,6 +27,7 @@ def get_weather_request():
 
   api_key_file = open(API_KEY_FILE_PATH, "r")
   api_key = api_key_file.read()
+  api_key_file.close()
   return requests.get(API_URL.format(CITY_NAME, api_key))
 
 

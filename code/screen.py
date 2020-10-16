@@ -18,11 +18,13 @@ from PIL import Image,ImageDraw,ImageFont
 # my files
 import DateAndTime
 import Weather
-from tasks import get_all_task_titles
+import Tasks
 
+# Constants
 LOG_FILE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'screen.log')
+GOOGLE_API_REQUEST_PER_MINUTE = 10
 
-def update_screen(dt, weather):
+def update_screen(dt, weather, tasks):
   # Update time
   dt.update()
 
@@ -54,7 +56,7 @@ def update_screen(dt, weather):
 
     # Task Section
     draw_todo(draw)
-    draw_tasks(draw)
+    draw_tasks(draw, tasks)
 
     # Displaying image on screen
     logging.info("Displaying image")
@@ -87,14 +89,11 @@ def draw_horizontal_line(draw):
   draw.line((0, 131, 200, 131), fill = 0)
 
 
-def draw_tasks(draw):
-  logging.info("API call for tasks")
-  tasks = get_all_task_titles()
-
+def draw_tasks(draw, tasks): 
   logging.info("Drawing tasks")
 
   height = 60
-  for task in tasks:
+  for task in tasks.get_all_tasks():
     draw.text((220, height), '-' + task, font = font18, fill = 0)
     height = height + 25
 
@@ -152,6 +151,12 @@ def update_weather(weather_obj):
   weather_obj.update_weather_dict()
 
 
+def update_tasks(tasks):
+  logging.info('Updating tasks')
+  # Get weather information
+  tasks.update( GOOGLE_API_REQUEST_PER_MINUTE )
+
+
 if __name__ == "__main__":
   # init logging
   logging.basicConfig(filename=LOG_FILE_PATH, level=logging.DEBUG)
@@ -163,17 +168,21 @@ if __name__ == "__main__":
   # init weather
   weather_obj = Weather.Weather()
 
+  # init tasks
+  tasks = Tasks.Tasks()
+
   # init the fonts
   font18 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 18)
   font24 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 24)
   font35 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 35)
   font68 = ImageFont.truetype(os.path.join(fontdir, 'Font.ttc'), 68)
 
-  schedule.every(1).minutes.do(update_screen, dt = dt, weather = weather_obj.weather_dict)
+  schedule.every(1).minutes.do(update_screen, dt = dt, weather = weather_obj.weather_dict, tasks = tasks)
   schedule.every(1).minutes.do(update_weather, weather_obj = weather_obj)
+  schedule.every(1).minutes.do(update_tasks, tasks = tasks)
   schedule.every(5).minutes.do(check_log_file)
 
-  update_screen(dt, weather_obj.weather_dict)
+  update_screen(dt, weather_obj.weather_dict, tasks)
 
   while True:
     try:

@@ -96,7 +96,7 @@ def connect_to_service():
     with open(TOCKEN_PICKLE, 'wb') as token:
       pickle.dump(creds, token)
 
-  service = build('tasks', 'v1', credentials=creds)
+  service = build('tasks', 'v1', credentials=creds, cache_discovery=False)
   return service
 
 

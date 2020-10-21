@@ -10,7 +10,7 @@ from google.auth.transport.requests import Request
 import TaskList
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/tasks.readonly']
+SCOPES = ['https://www.googleapis.com/auth/tasks']
 
 # Paths
 CREDS_JSON = os.path.join( os.path.dirname( os.path.realpath(__file__) ), "client_secret.json")
@@ -22,6 +22,7 @@ class Tasks:
 
     # -1 refers to that task_list_ids should be updated, the rest the index of the task list in task_list_ids
     self.update_index = -1 
+    self.delete_completed_index = 0
 
     self.update_all()
 
@@ -40,6 +41,19 @@ class Tasks:
         self.task_lists[ self.update_index ].update(service)
 
       self.update_index += 1
+
+  def delete_completed_tasks(self, n):
+    '''Deletes all completed tasks in n task lists.'''
+    
+    service = connect_to_service()
+
+    for _ in range(n):
+      if self.delete_completed_index >= len( self.task_lists ):
+        self.delete_completed_index = 0
+
+      self.task_lists[ self.delete_completed_index ].delete_completed_tasks(service)
+
+      self.delete_completed_index += 1
 
   def update_all(self):
     service = connect_to_service()
@@ -89,14 +103,14 @@ def connect_to_service():
   if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
       creds.refresh(Request())
-  else:
-    flow = InstalledAppFlow.from_client_secrets_file(CREDS_JSON, SCOPES)
-    creds = flow.run_local_server(port = 0)
-    # Save the credentials for the next run
-    with open(TOCKEN_PICKLE, 'wb') as token:
-      pickle.dump(creds, token)
+    else:
+      flow = InstalledAppFlow.from_client_secrets_file(CREDS_JSON, SCOPES)
+      creds = flow.run_local_server(port = 0)
+      # Save the credentials for the next run
+      with open(TOCKEN_PICKLE, 'wb') as token:
+        pickle.dump(creds, token)
 
-  service = build('tasks', 'v1', credentials=creds, cache_discovery=False)
+  service = build('tasks', 'v1', credentials=creds)
   return service
 
 

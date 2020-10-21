@@ -19,6 +19,19 @@ class TaskList:
       for item in items:
         self.tasks.append(item['title'])
 
+  def delete_completed_tasks(self, service):
+    results = service.tasks().list(tasklist = self.id, showCompleted = True, showHidden = True).execute()
+    items = results.get('items')
+
+    if not items: # empty list do nothing
+      pass
+
+    else:
+      for item in items:
+        # if the task has been completed delete it
+        if item['status'] == 'completed': 
+          service.tasks().delete(tasklist = self.id, task = item['id']).execute()
+
 
 def rfc3339_today_midnight(): 
   now = datetime.datetime.now()

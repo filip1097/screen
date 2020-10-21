@@ -157,6 +157,11 @@ def update_tasks(tasks):
   tasks.update( GOOGLE_API_REQUEST_PER_MINUTE )
 
 
+def delete_completed_tasks(tasks):
+  logging.info('Deleting completed tasks')
+  tasks.delete_completed_tasks(1)
+
+
 if __name__ == "__main__":
   # init logging
   logging.basicConfig(filename=LOG_FILE_PATH, level=logging.DEBUG)
@@ -181,6 +186,7 @@ if __name__ == "__main__":
   schedule.every(1).minutes.do(update_weather, weather_obj = weather_obj)
   schedule.every(1).minutes.do(update_tasks, tasks = tasks)
   schedule.every(5).minutes.do(check_log_file)
+  schedule.every(12).hours.do(delete_completed_tasks, tasks = tasks)
 
   update_screen(dt, weather_obj.weather_dict, tasks)
 

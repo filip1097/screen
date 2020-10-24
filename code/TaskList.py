@@ -1,6 +1,7 @@
 import datetime
+import logging
 import time
-
+import googleapiclient
 
 class TaskList:
   def __init__(self, id):
@@ -8,7 +9,13 @@ class TaskList:
     self.tasks = []
 
   def update(self, service):
-    results = service.tasks().list(tasklist = self.id, showCompleted = False, dueMax = rfc3339_today_midnight()).execute()
+    try:
+      results = service.tasks().list(tasklist = self.id, showCompleted = False, dueMax = rfc3339_today_midnight()).execute()
+    except googleapiclient.errors.HttpError as e:
+      logging.warning(e)
+      logging.warning('Could not update task list.')
+      return
+    
     items = results.get('items')
     self.tasks = []
 

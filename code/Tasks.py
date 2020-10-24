@@ -41,6 +41,8 @@ class Tasks:
         self.task_lists[ self.update_index ].update(service)
 
       self.update_index += 1
+    
+    service.close()
 
   def delete_completed_tasks(self, n):
     '''Deletes all completed tasks in n task lists.'''
@@ -55,12 +57,16 @@ class Tasks:
 
       self.delete_completed_index += 1
 
+    service.close()
+
   def update_all(self):
     service = connect_to_service()
     self.update_tasks_lists(service)
 
     for task_list in self.task_lists: 
       task_list.update(service)
+
+    service.close()
 
   def update_tasks_lists(self, service):
     # Call the Tasks API

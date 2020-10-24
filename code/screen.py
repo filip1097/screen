@@ -22,7 +22,7 @@ import Tasks
 
 # Constants
 LOG_FILE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'screen.log')
-GOOGLE_API_REQUEST_PER_MINUTE = 10
+GOOGLE_API_REQUEST_PER_MINUTE = 5
 
 def update_screen(dt, weather, tasks):
   # Update time

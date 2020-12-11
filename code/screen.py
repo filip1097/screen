@@ -25,6 +25,8 @@ LOG_FILE_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'scree
 GOOGLE_API_REQUEST_PER_MINUTE = 5
 
 def update_screen(dt, weather, tasks):
+  # TODO: add decription
+  # TODO: add unittest
   # Update time
   dt.update()
 
@@ -72,24 +74,32 @@ def update_screen(dt, weather, tasks):
 
 
 def draw_date_and_time(draw):
+  # TODO: add description
+  # TODO: add unittest
   logging.info("Drawing date and time")
   draw.text((12, 0), dt.get_time_string(), font = font68, fill = 0)
   draw.text((32, 80), dt.get_date_string(), font = font24, fill = 0)
 
 
 def draw_vertical_line(draw):
+  # TODO: add description
+  # TODO: add unittest
   draw.line((199, 0, 199, 300), fill=0)
   draw.line((200, 0, 200, 300), fill=0)
   draw.line((201, 0, 201, 300), fill=0)
 
 
 def draw_horizontal_line(draw):
+  # TODO: add description
+  # TODO: add unittest
   draw.line((0, 129, 200, 129), fill = 0) 
   draw.line((0, 130, 200, 130), fill = 0)
   draw.line((0, 131, 200, 131), fill = 0)
 
 
 def draw_tasks(draw, tasks): 
+  # TODO: add description
+  # TODO: add unittest
   logging.info("Drawing tasks")
 
   height = 60
@@ -99,6 +109,8 @@ def draw_tasks(draw, tasks):
 
 
 def draw_temperature(draw, weather):
+  # TODO: add description
+  # TODO: add unittest
   logging.info("Drawing temperature")
   
   temp_str = str( round(weather['temp']) )
@@ -119,16 +131,22 @@ def draw_temperature(draw, weather):
 
 
 def draw_todo(draw):
+  # TODO: add description
+  # TODO: add unittest
   logging.info("Drawing TODO")
   draw.text((220, 10), "TODO:", font = font35, fill = 0)
 
 
 def draw_weather_desc(draw, weather):
+  # TODO: add description
+  # TODO: add unittest
   logging.info("Drawing weather description")
   draw.text((30, 270), weather['description'], font = font18, fill = 0)
 
 
 def paste_weather_icon(image, weather):
+  # TODO: add description
+  # TODO: add unittest
   logging.info("Pasting weather icon")
   icon_path = os.path.join(icondir, weather['icon_file_name'])
   weather_icon = Image.open(icon_path)
@@ -136,6 +154,8 @@ def paste_weather_icon(image, weather):
 
 
 def check_log_file():
+  # TODO: add description
+  # TODO: add unittest
   logging.info('Checking if the log file should be cleared')
   log_file_stat = os.stat(LOG_FILE_PATH)
 
@@ -146,18 +166,24 @@ def check_log_file():
 
 
 def update_weather(weather_obj):
+  # TODO: add description
+  # TODO: add unittest
   logging.info('Updating weather')
   # Get weather information
   weather_obj.update_weather_dict()
 
 
 def update_tasks(tasks):
+  # TODO: add description
+  # TODO: add unittest
   logging.info('Updating tasks')
   # Get weather information
   tasks.update( GOOGLE_API_REQUEST_PER_MINUTE )
 
 
 def delete_completed_tasks(tasks):
+  # TODO: add description
+  # TODO: add unittest
   logging.info('Deleting completed tasks')
   tasks.delete_completed_tasks(1)
 
@@ -198,7 +224,7 @@ if __name__ == "__main__":
     except Exception as e:
       logging.error("Unexpected exception:")
       logging.error(e)
-      traceback.print_exc(file = LOG_FILE_PATH)
+      logging.error(traceback.format_exc())
       epd4in2.epdconfig.module_exit()
       exit()  
       

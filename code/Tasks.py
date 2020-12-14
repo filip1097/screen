@@ -1,5 +1,6 @@
 from __future__ import print_function
 import datetime
+import logging
 import time
 import pickle
 import os.path
@@ -29,7 +30,12 @@ class Tasks:
   def update(self, n):
     '''Makes n update requests.'''
     
-    service = connect_to_service()
+    try:
+      service = connect_to_service()
+    except Exception as e:
+      logging.warning('Could not connect to Task service. Not updating tasks for this update call.')
+      logging.warning(e)
+      return
 
     for _ in range(n):
       if self.update_index >= len( self.task_lists ):
